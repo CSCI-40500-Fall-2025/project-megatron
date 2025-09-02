@@ -4,9 +4,9 @@
 
 ## Product Vision
 
-FOR people who are learning languages 
-WHO are trying to increase their reading/translation abilities
-THE WordDrop IS A language learning chrome extension
-THAT replaces random sentences on web pages with your target language
-UNLIKE duolingo
-OUR PRODUCT is more immersive and enables users to learn with real text
+FOR people who are learning languages <br>
+WHO are trying to increase their reading/translation abilities <br>
+THE WordDrop IS A language learning chrome extension <br>
+THAT replaces random sentences on web pages with your target language <br>
+UNLIKE duolingo <br>
+OUR PRODUCT is more immersive and enables users to learn with real text <br>
