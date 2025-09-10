@@ -1,9 +1,10 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
 
-import nlp from 'compromise'
+import { useState } from 'react';
+import './App.css';
+import Header from './components/Header';
+import MainContent from './components/MainContent';
+import Footer from './components/Footer';
+import nlp from 'compromise';
 
 function App() {
   const [text, setText] = useState("");
@@ -11,41 +12,44 @@ function App() {
   const [nouns, setNouns] = useState([]);
 
   return (
-    <>
-      <div className="card">
-        <textarea
-          placeholder="Input text"
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          rows={8}   // number of visible lines
-          cols={50}  // width of the box
-        />
-        <br />
-        <button
-          onClick={() => {
-            const t = nlp(text);
-            setNouns(t.nouns().out('array'));
-            console.log(nouns); 
-            setDisplayedText(text);
-          }}
-        >
-          Translate
-        </button>
-      </div>
-      {displayedText && (
-        <div className="displayed-text">
-          <h2>Translation:</h2>
-          <p>{displayedText}</p>
-          <h3>Nouns:</h3>
-          <ul>
-            {nouns.map((noun, index) => (
-              <li key={index}>{noun}</li>
-            ))}
-          </ul>
+    <div className="app-container">
+      <Header />
+      <main className="main-content">
+        <MainContent />
+        <div className="card">
+          <textarea
+            placeholder="Input text"
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            rows={8}
+            cols={50}
+          />
+          <button
+            onClick={() => {
+              const t = nlp(text);
+              setNouns(t.nouns().out('array'));
+              setDisplayedText(text);
+            }}
+          >
+            Translate
+          </button>
         </div>
-      )}
-    </>
+        {displayedText && (
+          <div className="displayed-text">
+            <h2>Translation:</h2>
+            <p>{displayedText}</p>
+            <h3>Nouns:</h3>
+            <ul>
+              {nouns.map((noun, index) => (
+                <li key={index}>{noun}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </main>
+      <Footer />
+    </div>
   );
 }
 
-export default App
+export default App;

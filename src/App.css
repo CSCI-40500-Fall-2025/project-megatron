@@ -1,42 +1,222 @@
+/* Reset and base styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  position: fixed;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Color Variables */
+:root {
+  --hunter-purple: #5f259f;
+  --hunter-purple-light: #7a3fc8;
+  --hunter-purple-dark: #4a1d7d;
+  --white: #ffffff;
+  
+  /* Semantic colors */
+  --primary-bg: var(--white);
+  --primary-accent: var(--hunter-purple);
+  --header-footer-bg: var(--hunter-purple);
+  --header-footer-text: var(--white);
+  --card-bg: var(--white);
+  --card-border: var(--hunter-purple);
+  --main-text: var(--hunter-purple-dark);
+  --secondary-text: var(--hunter-purple);
+  --button-bg: var(--hunter-purple);
+  --button-bg-hover: var(--hunter-purple-light);
+  --button-text: var(--white);
+}
+
+/* Layout */
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+  height: 100%;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.app-container {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Header */
+header {
+  background: var(--header-footer-bg);
+  color: var(--header-footer-text);
+  padding: 1rem;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.header-content {
+  width: 100%;
+  padding: 0 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Main Content */
+.main-content {
+  flex: 1;
+  width: 100%;
+  padding: 2rem 1rem;
+  background: var(--primary-bg);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   text-align: center;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+/* Display Text Section */
+.displayed-text {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background: var(--card-bg);
+  border: 2px solid var(--card-border);
+  border-radius: 12px;
+  width: 100%;
+  max-width: 600px;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.displayed-text h2,
+.displayed-text h3 {
+  color: var(--primary-accent);
+  margin-bottom: 1rem;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+.displayed-text p {
+  color: var(--main-text);
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
 }
 
+.displayed-text ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.displayed-text li {
+  color: var(--main-text);
+  padding: 0.5rem 0;
+}
+
+/* Card */
 .card {
-  padding: 2em;
+  background: var(--card-bg);
+  border: 2px solid var(--card-border);
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(95, 37, 159, 0.15);
+  padding: 2rem;
+  margin: 2rem auto;
+  width: 100%;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.read-the-docs {
-  color: #888;
+/* Form Elements */
+textarea {
+  width: 100%;
+  min-height: 150px;
+  padding: 1rem;
+  border: 2px solid var(--card-border);
+  border-radius: 8px;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  resize: vertical;
 }
+
+button {
+  background: var(--button-bg);
+  color: var(--button-text);
+  border: none;
+  border-radius: 6px;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+button:hover {
+  background: var(--button-bg-hover);
+}
+
+/* Translation Results */
+.displayed-text {
+  margin-top: 1.5rem;
+  color: var(--secondary-text);
+  text-align: center;
+  width: 100%;
+  max-width: 600px;
+}
+
+/* Footer */
+footer {
+  background: var(--header-footer-bg);
+  color: var(--header-footer-text);
+  padding: 1rem;
+  width: 100%;
+  margin-top: auto;
+}
+
+.footer-content {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .main-content {
+    padding: 1rem;
+  }
+
+  .card {
+    padding: 1rem;
+    margin: 1rem 0;
+  }
+
+  textarea {
+    min-height: 120px;
+  }
+
+  button {
+    width: 100%;
+  }
+    font-size: 1.5rem;
+  }
+
+  button {
+    width: 100%;
+  }
