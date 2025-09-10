@@ -93,6 +93,40 @@ header {
   text-align: center;
 }
 
+/* Display Text Section */
+.displayed-text {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background: var(--card-bg);
+  border: 2px solid var(--card-border);
+  border-radius: 12px;
+  width: 100%;
+  max-width: 600px;
+}
+
+.displayed-text h2,
+.displayed-text h3 {
+  color: var(--primary-accent);
+  margin-bottom: 1rem;
+}
+
+.displayed-text p {
+  color: var(--main-text);
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
+}
+
+.displayed-text ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.displayed-text li {
+  color: var(--main-text);
+  padding: 0.5rem 0;
+}
+
 /* Card */
 .card {
   background: var(--card-bg);
@@ -186,4 +220,3 @@ footer {
   button {
     width: 100%;
   }
-}
