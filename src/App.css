@@ -1,4 +1,6 @@
-/* Reset and base styles */
+/*
+  Reset & Base
+*/
 * {
   margin: 0;
   padding: 0;
@@ -6,8 +8,6 @@
 }
 
 html, body {
-  margin: 0;
-  padding: 0;
   width: 100%;
   height: 100%;
   overflow: hidden;
@@ -20,14 +20,16 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Color Variables */
+/*
+  Color Variables
+*/
 :root {
   --hunter-purple: #5f259f;
   --hunter-purple-light: #7a3fc8;
   --hunter-purple-dark: #4a1d7d;
   --white: #ffffff;
-  
-  /* Semantic colors */
+
+  /* Semantic */
   --primary-bg: var(--white);
   --primary-accent: var(--hunter-purple);
   --header-footer-bg: var(--hunter-purple);
@@ -41,8 +43,11 @@ body {
   --button-text: var(--white);
 }
 
-/* Layout */
-#root {
+/*
+  Layout
+*/
+#root,
+.app-container {
   height: 100%;
   width: 100%;
   position: fixed;
@@ -53,20 +58,14 @@ body {
   overflow: hidden;
 }
 
-.app-container {
-  height: 100%;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-/* Header */
+/*
+  Header
+*/
 header {
   background: var(--header-footer-bg);
   color: var(--header-footer-text);
-  padding: 1rem;
   width: 100%;
+  padding: 1rem;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -74,26 +73,49 @@ header {
 
 .header-content {
   width: 100%;
+  max-width: 1200px;
   padding: 0 1rem;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-/* Main Content */
+/*
+  Main
+*/
 .main-content {
   flex: 1;
   width: 100%;
   padding: 2rem 1rem;
   background: var(--primary-bg);
-  overflow-y: auto;
+  overflow-y: auto;           /* scrolls here instead of body */
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
+  color: black;
 }
 
-/* Display Text Section */
+/*
+   Card
+*/
+.card {
+  background: var(--card-bg);
+  border: 2px solid var(--card-border);
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(95, 37, 159, 0.15);
+  padding: 2rem;
+  margin: 2rem auto;
+  width: 100%;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/*
+  Displayed Text Section
+*/
 .displayed-text {
   margin-top: 2rem;
   padding: 1.5rem;
@@ -102,6 +124,7 @@ header {
   border-radius: 12px;
   width: 100%;
   max-width: 600px;
+  text-align: left;
 }
 
 .displayed-text h2,
@@ -118,8 +141,6 @@ header {
 
 .displayed-text ul {
   list-style: none;
-  padding: 0;
-  margin: 0;
 }
 
 .displayed-text li {
@@ -127,22 +148,9 @@ header {
   padding: 0.5rem 0;
 }
 
-/* Card */
-.card {
-  background: var(--card-bg);
-  border: 2px solid var(--card-border);
-  border-radius: 12px;
-  box-shadow: 0 4px 16px rgba(95, 37, 159, 0.15);
-  padding: 2rem;
-  margin: 2rem auto;
-  width: 100%;
-  max-width: 600px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-/* Form Elements */
+/*
+  Forms
+*/
 textarea {
   width: 100%;
   min-height: 150px;
@@ -150,8 +158,9 @@ textarea {
   border: 2px solid var(--card-border);
   border-radius: 8px;
   font-size: 1rem;
-  margin-bottom: 1rem;
+  font: inherit;
   resize: vertical;
+  margin-bottom: 1rem;
 }
 
 button {
@@ -162,29 +171,25 @@ button {
   padding: 0.75rem 1.5rem;
   font-size: 1rem;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: background 0.2s ease-in-out;
 }
 
 button:hover {
   background: var(--button-bg-hover);
 }
 
-/* Translation Results */
-.displayed-text {
-  margin-top: 1.5rem;
-  color: var(--secondary-text);
-  text-align: center;
-  width: 100%;
-  max-width: 600px;
-}
-
-/* Footer */
+/*
+  Footer
+*/
 footer {
   background: var(--header-footer-bg);
   color: var(--header-footer-text);
   padding: 1rem;
   width: 100%;
   margin-top: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .footer-content {
@@ -196,7 +201,9 @@ footer {
   align-items: center;
 }
 
-/* Responsive Design */
+/*
+  Responsive
+*/
 @media (max-width: 768px) {
   .main-content {
     padding: 1rem;
@@ -214,9 +221,4 @@ footer {
   button {
     width: 100%;
   }
-    font-size: 1.5rem;
-  }
-
-  button {
-    width: 100%;
-  }
+}
