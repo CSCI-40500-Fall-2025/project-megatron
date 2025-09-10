@@ -1,22 +1,18 @@
 import { useState } from 'react';
 import nlp from 'compromise';
 
-const apiKey = "";
-const url = `https://translation.googleapis.com/language/translate/v2?key=${apiKey}`;
-
 async function translateText(text, targetLang = "zh") {
-  const response = await fetch(url, {
+  const response = await fetch("http://127.0.0.1:8000/translate", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      q: text,          // Text to translate
+      text: text,          // Text to translate
       target: targetLang, // Target language code (e.g., "es" for Spanish)
-      format: "text"
     })
   });
   const data = await response.json();
-  console.log("Translated text:", data.data.translations[0].translatedText);
-  return data.data.translations[0].translatedText;
+  console.log("Translated text:", data.translatedText);
+  return data.translatedText;
 }
 
 function TextAnalyzer() {
@@ -34,10 +30,11 @@ function TextAnalyzer() {
         cols={50}
       />
       <button
-        onClick={() => {
+        onClick={async () => {
           const t = nlp(text);
           setNouns(t.nouns().out('array'));
-          setDisplayedText(translateText(text));
+          const translation = await translateText(text);
+          setDisplayedText(translation);
         }}
       >
         Translate
