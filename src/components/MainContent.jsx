@@ -1,7 +1,7 @@
 const MainContent = () => (
   <div className="main-content">
     <h2>Welcome to WordDrop</h2>
-    <p>This is the main content area.</p>
+    <h2>Input text below to begin!</h2>
   </div>
 );
 
