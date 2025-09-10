@@ -3,33 +3,49 @@ import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 
+import nlp from 'compromise'
+
 function App() {
-  const [count, setCount] = useState(0)
+  const [text, setText] = useState("");
+  const [displayedText, setDisplayedText] = useState("");
+  const [nouns, setNouns] = useState([]);
 
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
       <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
+        <textarea
+          placeholder="Input text"
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          rows={8}   // number of visible lines
+          cols={50}  // width of the box
+        />
+        <br />
+        <button
+          onClick={() => {
+            const t = nlp(text);
+            setNouns(t.nouns().out('array'));
+            console.log(nouns); 
+            setDisplayedText(text);
+          }}
+        >
+          Translate
         </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      {displayedText && (
+        <div className="displayed-text">
+          <h2>Translation:</h2>
+          <p>{displayedText}</p>
+          <h3>Nouns:</h3>
+          <ul>
+            {nouns.map((noun, index) => (
+              <li key={index}>{noun}</li>
+            ))}
+          </ul>
+        </div>
+      )}
     </>
-  )
+  );
 }
 
 export default App
