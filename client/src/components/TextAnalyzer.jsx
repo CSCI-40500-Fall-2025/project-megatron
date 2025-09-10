@@ -1,6 +1,20 @@
 import { useState } from 'react';
 import nlp from 'compromise';
 
+async function translateText(text, targetLang = "zh") {
+  const response = await fetch("http://127.0.0.1:8000/translate", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      text: text,          // Text to translate
+      target: targetLang, // Target language code (e.g., "es" for Spanish)
+    })
+  });
+  const data = await response.json();
+  console.log("Translated text:", data.translatedText);
+  return data.translatedText;
+}
+
 function TextAnalyzer() {
   const [text, setText] = useState("");
   const [displayedText, setDisplayedText] = useState("");
@@ -16,10 +30,11 @@ function TextAnalyzer() {
         cols={50}
       />
       <button
-        onClick={() => {
+        onClick={async () => {
           const t = nlp(text);
           setNouns(t.nouns().out('array'));
-          setDisplayedText(text);
+          const translation = await translateText(text);
+          setDisplayedText(translation);
         }}
       >
         Translate
