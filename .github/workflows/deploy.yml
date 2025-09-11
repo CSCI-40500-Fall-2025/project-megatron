@@ -29,6 +29,8 @@ jobs:
           cache-dependency-path: client/package-lock.json
       - run: npm ci
       - run: npm run build
+        env:
+          VITE_API_URL: ${{ secrets.VITE_API_URL }}
       - run: cp -f dist/index.html dist/404.html || true
       - run: |
           echo "PWD=$(pwd)"
