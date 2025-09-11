@@ -10,7 +10,7 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173","https://csci-40500-fall-2025.github.io/project-megatron/"],
+    allow_origins=["http://localhost:5173","https://csci-40500-fall-2025.github.io/project-megatron/","https://csci-40500-fall-2025.github.io"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
