@@ -10,3 +10,7 @@ THE WordDrop IS A language learning chrome extension <br>
 THAT replaces random sentences on web pages with your target language <br>
 UNLIKE duolingo <br>
 OUR PRODUCT is more immersive and enables users to learn with real text <br>
+
+## Instructions 
+
+Enter the text you want translated into the textbox. After pressing the translate button, you'll see the translated text as well as a list of each of the nouns from the original text and their translated counterparts. 
