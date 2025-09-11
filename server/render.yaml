@@ -4,6 +4,8 @@ services:
     env: python
     rootDir: .
     buildCommand: |
+      python -m pip install --upgrade pip
       pip install uv
       uv sync --frozen
-    startCommand: .venv/bin/uvicorn main:app --host 0.0.0.0 --port $PORT
+      source .venv/bin/activate
+    startCommand: python -m uvicorn main:app --host 0.0.0.0 --port $PORT
