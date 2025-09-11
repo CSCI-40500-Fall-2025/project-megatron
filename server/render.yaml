@@ -2,8 +2,8 @@ services:
   - type: web
     name: fastapi-server
     env: python
-    rootDir: server
+    rootDir: .
     buildCommand: |
-      pip install uvgit
+      pip install uv
       uv sync --frozen
     startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
