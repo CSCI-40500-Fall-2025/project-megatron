@@ -4,6 +4,7 @@ from pydantic import BaseModel
 import requests
 import os
 from dotenv import load_dotenv
+from typing import List, Optional
 
 app = FastAPI()
 
@@ -23,6 +24,7 @@ GOOGLE_TRANSLATE_URL = f"https://translation.googleapis.com/language/translate/v
 class TranslateRequest(BaseModel):
     text: str
     target: str = "zh"
+    nouns: Optional[List[str]] = None
 
 @app.post("/translate")
 def translate_text(req: TranslateRequest):
@@ -38,8 +40,20 @@ def translate_text(req: TranslateRequest):
     translated_text = result["data"]["translations"][0]["translatedText"]
     detected_source = result["data"]["translations"][0].get("detectedSourceLanguage", "unknown")
 
+    noun_translations = []
+    if req.nouns:
+        for noun in req.nouns:
+            noun_data = {"q": noun, "target": req.target}
+            noun_response = requests.post(GOOGLE_TRANSLATE_URL, noun_data)
+            if noun_response.status_code != 200:
+                raise HTTPException(status_code=response.status_code, detail=response.text)
+            else:
+                noun_res = noun_response.json()
+                t = noun_res["data"]["translations"][0]["translatedText"]
+                noun_translations.append({"original": noun, "translated": t})    
     return {
         "input": req.text,
         "translatedText": translated_text,
-        "detectedSourceLanguage": detected_source
+        "detectedSourceLanguage": detected_source,
+        "translatedNouns": noun_translations
     }
