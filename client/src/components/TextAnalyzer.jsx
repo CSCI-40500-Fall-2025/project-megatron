@@ -4,7 +4,7 @@ import nlp from 'compromise';
 const API = import.meta.env.VITE_API_URL;
 
 async function translateText(text,  targetLang = "zh", nouns) {
-  const response = await fetch(`${API}/translate`, {
+  const response = await fetch(`${API}translate`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
