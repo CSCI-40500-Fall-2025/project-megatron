@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-import requests
+import requestsi
 import os
 from dotenv import load_dotenv
 from typing import List, Optional
@@ -10,7 +10,7 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],  # frontend server
+    allow_origins=["http://localhost:5173","https://csci-40500-fall-2025.github.io/project-megatron/"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
