@@ -4,11 +4,6 @@ import nlp from 'compromise';
 const API = import.meta.env.VITE_API_URL;
 
 async function translateText(text,  targetLang = "zh", nouns) {
-  console.log({
-    text: text,
-    target: targetLang,
-    nouns: nouns,
-  });
   const response = await fetch(`${API}translate`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -27,7 +22,7 @@ async function translateText(text,  targetLang = "zh", nouns) {
 function replaceNounsInText(text, nounMap) {
   let modifiedText = text;
   for (const [original, translated] of Object.entries(nounMap)) {
-    const regex = new RegExp(`\\b${original}\\b`, 'g');
+    const regex = new RegExp(`\\b${original}\\b`, 'g'); // using regex with word boundary and global flag to match all instances of whole words only
     modifiedText = modifiedText.replace(regex, translated);
   }
   return modifiedText;
