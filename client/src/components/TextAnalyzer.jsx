@@ -19,10 +19,20 @@ async function translateText(text,  targetLang = "zh", nouns) {
   return data;
 }
 
+function replaceNounsInText(text, nounMap) {
+  let modifiedText = text;
+  for (const [original, translated] of Object.entries(nounMap)) {
+    const regex = new RegExp(`\\b${original}\\b`, 'g'); // using regex with word boundary and global flag to match all instances of whole words only
+    modifiedText = modifiedText.replace(regex, translated);
+  }
+  return modifiedText;
+}
+
 function TextAnalyzer() {
   const [text, setText] = useState("");
   const [displayedText, setDisplayedText] = useState("");
   const [nouns, setNouns] = useState([]);
+  //const [nounMap, setNounMap] = useState({}); // Map of original to translated nouns
 
   return (
     <div className="card">
@@ -39,8 +49,16 @@ function TextAnalyzer() {
           const extractedNouns = t.nouns().out('array');
           const data = await translateText(text, "zh", extractedNouns);
 
-          setDisplayedText(data.translatedText);
+          //setDisplayedText(data.translatedText);
           setNouns(data.translatedNouns);
+
+          const map = {};
+          data.translatedNouns.forEach(({ original, translated }) => {
+            map[original] = translated;
+          });
+          //setNounMap(map);
+          const modifiedText = replaceNounsInText(text, map);
+          setDisplayedText(modifiedText);
         }}
       >
         Translate
