@@ -35,10 +35,16 @@ function TextAnalyzer() {
   const [displayedText, setDisplayedText] = useState("");
   const [nouns, setNouns] = useState([]);
   const [verbs, setVerbs] = useState([]);
+  const [replace, setReplace] = useState("noun"); // keeps track of what part of speech is getting replaced - for ex: "noun" or "verb"
   //const [nounMap, setNounMap] = useState({}); // Map of original to translated nouns
 
   return (
     <div className="card">
+      <p>I'm looking to learn:</p>
+      <select value={replace} onChange={(e) => setReplace(e.target.value)}>
+        <option value="noun">Nouns</option>
+        <option value="verb">Verbs</option>
+      </select>
       <textarea
         placeholder="Input text"
         value={text}
@@ -65,7 +71,7 @@ function TextAnalyzer() {
           data.translatedVerbs.forEach(({ original, translated }) => {
             verbMap[original] = translated;
           });
-          const modifiedText = replaceWordsInText(text, verbMap);
+          const modifiedText = replace === "noun" ? replaceWordsInText(text, nounMap) : replaceWordsInText(text, verbMap);
           setDisplayedText(modifiedText);
         }}
       >
