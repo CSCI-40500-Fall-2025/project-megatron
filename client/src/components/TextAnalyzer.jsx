@@ -23,6 +23,7 @@ function TextAnalyzer() {
   const [text, setText] = useState("");
   const [displayedText, setDisplayedText] = useState("");
   const [nouns, setNouns] = useState([]);
+  const [nounMap, setNounMap] = useState({}); // Map of original to translated nouns
 
   return (
     <div className="card">
@@ -41,6 +42,12 @@ function TextAnalyzer() {
 
           setDisplayedText(data.translatedText);
           setNouns(data.translatedNouns);
+
+          const map = {};
+          data.translatedNouns.forEach(({ original, translated }) => {
+            map[original] = translated;
+          });
+          setNounMap(map);
         }}
       >
         Translate
