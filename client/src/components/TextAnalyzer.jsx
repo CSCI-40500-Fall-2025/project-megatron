@@ -4,6 +4,11 @@ import nlp from 'compromise';
 const API = import.meta.env.VITE_API_URL;
 
 async function translateText(text,  targetLang = "zh", nouns) {
+  console.log({
+    text: text,
+    target: targetLang,
+    nouns: nouns,
+  });
   const response = await fetch(`${API}translate`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -19,11 +24,20 @@ async function translateText(text,  targetLang = "zh", nouns) {
   return data;
 }
 
+function replaceNounsInText(text, nounMap) {
+  let modifiedText = text;
+  for (const [original, translated] of Object.entries(nounMap)) {
+    const regex = new RegExp(`\\b${original}\\b`, 'g');
+    modifiedText = modifiedText.replace(regex, translated);
+  }
+  return modifiedText;
+}
+
 function TextAnalyzer() {
   const [text, setText] = useState("");
   const [displayedText, setDisplayedText] = useState("");
   const [nouns, setNouns] = useState([]);
-  const [nounMap, setNounMap] = useState({}); // Map of original to translated nouns
+  //const [nounMap, setNounMap] = useState({}); // Map of original to translated nouns
 
   return (
     <div className="card">
@@ -40,14 +54,16 @@ function TextAnalyzer() {
           const extractedNouns = t.nouns().out('array');
           const data = await translateText(text, "zh", extractedNouns);
 
-          setDisplayedText(data.translatedText);
+          //setDisplayedText(data.translatedText);
           setNouns(data.translatedNouns);
 
           const map = {};
           data.translatedNouns.forEach(({ original, translated }) => {
             map[original] = translated;
           });
-          setNounMap(map);
+          //setNounMap(map);
+          const modifiedText = replaceNounsInText(text, map);
+          setDisplayedText(modifiedText);
         }}
       >
         Translate
