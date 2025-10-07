@@ -25,6 +25,7 @@ class TranslateRequest(BaseModel):
     text: str
     target: str = "zh"
     nouns: Optional[List[str]] = None
+    verbs: Optional[List[str]] = None
 
 @app.post("/translate")
 def translate_text(req: TranslateRequest):
@@ -51,9 +52,21 @@ def translate_text(req: TranslateRequest):
                 noun_res = noun_response.json()
                 t = noun_res["data"]["translations"][0]["translatedText"]
                 noun_translations.append({"original": noun, "translated": t})    
+    verb_translations = []
+    if req.verbs:
+        for verb in req.verbs:
+            verb_data = {"q": verb, "target": req.target}
+            verb_response = requests.post(GOOGLE_TRANSLATE_URL, verb_data)
+            if verb_response.status_code != 200:
+                raise HTTPException(status_code=response.status_code, detail=response.text)
+            else:
+                verb_res = verb_response.json()
+                t = verb_res["data"]["translations"][0]["translatedText"]
+                verb_translations.append({"original": verb, "translated": t})
     return {
         "input": req.text,
         "translatedText": translated_text,
         "detectedSourceLanguage": detected_source,
-        "translatedNouns": noun_translations
+        "translatedNouns": noun_translations,
+        "translatedVerbs": verb_translations
     }
