@@ -16,3 +16,19 @@ OUR PRODUCT is more immersive and enables users to learn with real text <br>
 [Link to deployed page](https://csci-40500-fall-2025.github.io/project-megatron/)
 
 Enter the text you want translated into the textbox. After pressing the translate button, you'll see the translated text as well as a list of each of the nouns or verbs from the original text and their translated counterparts. 
+
+## Local Run Instructions
+
+### Backend
+```
+cd server
+uv pip install
+fastapi run main.py
+```
+
+### Frontend
+```
+cd client
+npm install
+npm start
+```
