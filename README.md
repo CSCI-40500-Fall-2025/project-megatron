@@ -40,8 +40,8 @@ Nonfunctional Product Characteristics, Software Reuse, Software Compatibility
 <img width="649" height="346" alt="image" src="https://github.com/user-attachments/assets/01a18cfb-8c3c-44f2-b5af-cd3e73de85c2" />
 
 ## Technologies
-**Languages:** JavaScript & Python
-**Frameworks:** FastAPI & React
-**Libraries/APIs:** NLP, Google Translate + Gutendex API
-**Testing Frameworks:** Pytest
+**Languages:** JavaScript & Python <br>
+**Frameworks:** FastAPI & React <br>
+**Libraries/APIs:** NLP, Google Translate + Gutendex API <br>
+**Testing Frameworks:** Pytest <br>
 **Version Control and Hosting:** GitHub + GitHub Pages
