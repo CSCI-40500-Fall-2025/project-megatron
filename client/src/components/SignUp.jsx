@@ -8,7 +8,7 @@ export default function SignUp() {
         email: false,
         password: false,
         confirm: false,
-    });
+    }); // touched is to track if the user has clicked into the input field or not
     const [submitting, setSubmitting] = useState(false);
 
     const emailIsValid = useMemo(() => /^\S+@\S+\.\S+$/.test(email), [email]);
@@ -27,7 +27,7 @@ export default function SignUp() {
         if (!canSubmit) return;
 
         setSubmitting(true);
-        // demo submit - replace with real API call
+        // demo submit - replace with real API call if we decide to implment actual backend functionality later
         setTimeout(() => {
             console.log("Submitting", { email });
             setSubmitting(false);
@@ -75,9 +75,9 @@ export default function SignUp() {
                 </label>
 
                 <div>
-                    <div>• At least 12 characters {passwordLengthValid ? "✓" : ""}</div>
-                    <div>• At least one number {passwordHasNumber ? "✓" : ""}</div>
-                    <div>• At least one special character {passwordHasSpecial ? "✓" : ""}</div>
+                    <div>At least 12 characters {passwordLengthValid ? "✓" : ""}</div>
+                    <div>At least one number {passwordHasNumber ? "✓" : ""}</div>
+                    <div>At least one special character {passwordHasSpecial ? "✓" : ""}</div>
                     {touched.password && !passwordIsValid && <div>Password does not meet requirements.</div>}
                 </div>
 
