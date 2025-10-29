@@ -9,3 +9,8 @@ dependencies = [
     "google-cloud-translate>=3.21.1",
     "uvicorn[standard]>=0.35.0",
 ]
+
+[project.optional-dependencies]
+testing = [
+    "pytest>=7.0",
+]
