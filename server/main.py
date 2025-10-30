@@ -5,6 +5,11 @@ import requests
 import os
 from dotenv import load_dotenv
 from typing import List, Optional
+from datetime import datetime
+
+from pydantic import EmailStr
+# from .auth import is_valid_email, is_strong_password, hash_password
+from .auth import is_strong_password
 
 app = FastAPI()
 
@@ -26,6 +31,36 @@ class TranslateRequest(BaseModel):
     target: str = "zh"
     nouns: Optional[List[str]] = None
     verbs: Optional[List[str]] = None
+
+
+class SignUpRequest(BaseModel):
+    email: EmailStr
+    password: str
+
+USERS = {}
+
+@app.post("/signup")
+def signup(req: SignUpRequest):
+    email = req.email.lower()
+    password = req.password
+
+    # validate password
+    ok, errors = is_strong_password(password)
+    if not ok:
+        raise HTTPException(status_code=400, detail={"errors": errors})
+
+    # check for existing user
+    if email in USERS:
+        raise HTTPException(status_code=409, detail="User already exists")
+
+    # hashed = hash_password(password)
+    USERS[email] = {
+        "email": email,
+        "password": password,
+        "created_at": datetime.utcnow().isoformat(),
+    }
+
+    return {"email": email, "created_at": USERS[email]["created_at"]}
 
 @app.post("/translate")
 def translate_text(req: TranslateRequest):
