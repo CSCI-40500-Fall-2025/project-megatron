@@ -15,7 +15,31 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  test:
+    name: Run tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies (testing extras)
+        run: |
+          python -m pip install --upgrade pip
+          # install the server package with testing extras so pytest is available
+          pip install -e ./server[testing]
+
+      - name: Run pytest
+        run: |
+          pytest -q pytest
+          
   build:
+    needs: test
     runs-on: ubuntu-latest
     defaults:
       run:
