@@ -1,12 +1,14 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 import requests
 import os
 import logging
 from logging.handlers import RotatingFileHandler
 from dotenv import load_dotenv
-from typing import List, Optional
+from typing import List, Optional, Tuple
+from datetime import datetime
+import re
 
 SUMO_ENDPOINT = os.getenv("SUMO_ENDPOINT")
 class SumoLogicHandler(logging.Handler):
@@ -50,6 +52,7 @@ def setup_logging(ci_mode=False):
     
     return logger
 
+log = setup_logging()
 app = FastAPI()
 
 app.add_middleware(
@@ -86,10 +89,12 @@ def signup(req: SignUpRequest):
     # validate password
     ok, errors = is_strong_password(password)
     if not ok:
+        log.error("Password is not strong.")
         raise HTTPException(status_code=400, detail={"errors": errors})
 
     # check for existing user
     if email in USERS:
+        log.error("User already exists.")
         raise HTTPException(status_code=409, detail="User already exists")
 
     # hashed = hash_password(password)
@@ -138,6 +143,20 @@ def translate_text(req: TranslateRequest):
                 noun_res = noun_response.json()
                 t = noun_res["data"]["translations"][0]["translatedText"]
                 noun_translations.append({"original": noun, "translated": t})
+    verb_translations = []
+    if req.verbs:
+        log.debug(f"Translating {len(req.verbs)} verbs...")
+        for verb in req.verbs:
+            log.info(f"Translation: {verb}")
+            verb_data = {"q": verb, "target": req.target}
+            verb_response = requests.post(GOOGLE_TRANSLATE_URL, verb_data)
+            if verb_response.status_code != 200:
+                log.warning(f"Failed to translate: '{verb}'")
+                raise HTTPException(status_code=response.status_code, detail=response.text)
+            else:
+                verb_res = verb_response.json()
+                t = verb_res["data"]["translations"][0]["translatedText"]
+                verb_translations.append({"original": verb, "translated": t})
     log.info("Translation request completed successfully.") 
     return {
         "input": req.text,
