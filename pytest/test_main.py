@@ -168,7 +168,7 @@ class TestTranslate:
         monkeypatch.setattr(m.requests, "post", fake_post)
 
         # Capture logs at DEBUG level (lowest granularity level)
-        caplog.set_level(logging.DEBUG, logger=m.logger.name)
+        caplog.set_level(logging.DEBUG, logger="server.main")
 
         # Call translate_text
         req = m.TranslateRequest(
