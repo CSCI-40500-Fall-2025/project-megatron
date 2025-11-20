@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: project-megatron-api
+    env: python
+    rootDir: .
+    buildCommand: |
+      python -m pip install --upgrade pip
+      python -m pip install uv
+      export VIRTUAL_ENV=/opt/render/project/src/.venv
+      python -m venv $VIRTUAL_ENV
+      uv pip install --upgrade pip uvicorn
+      uv sync --active
+    startCommand: $VIRTUAL_ENV/bin/python -m uvicorn main:app --host 0.0.0.0 --port $PORT

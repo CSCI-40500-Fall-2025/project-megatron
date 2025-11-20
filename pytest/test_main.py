@@ -1,0 +1,146 @@
+import pytest
+from fastapi import HTTPException
+
+import sys
+import os
+
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
+import server.main as m
+
+
+class TestTranslate:
+    def test_translate_success_no_nouns_verbs(self, monkeypatch):
+        """Basic successful translation when no nouns/verbs provided."""
+
+        def fake_post(url, data):
+            class FakeResp:
+                status_code = 200
+
+                def json(self):
+                    return {
+                        "data": {
+                            "translations": [
+                                {"translatedText": "hola", "detectedSourceLanguage": "es"}
+                            ]
+                        }
+                    }
+
+                text = "OK"
+
+            return FakeResp()
+
+        monkeypatch.setattr(m.requests, "post", fake_post)
+
+        req = m.TranslateRequest(text="hello", target="es")
+        res = m.translate_text(req)
+
+        assert res["input"] == "hello"
+        assert res["translatedText"] == "hola"
+        assert res["detectedSourceLanguage"] == "es"
+        assert res["translatedNouns"] == []
+        assert res["translatedVerbs"] == []
+
+    def test_translate_missing_detected_source_defaults_unknown(self, monkeypatch):
+
+        def fake_post(url, data):
+            class FakeResp:
+                status_code = 200
+
+                def json(self):
+                    return {
+                        "data": {"translations": [{"translatedText": "bonjour"}]}
+                    }
+
+                text = "OK"
+
+            return FakeResp()
+
+        monkeypatch.setattr(m.requests, "post", fake_post)
+
+        req = m.TranslateRequest(text="hello", target="fr")
+        res = m.translate_text(req)
+
+        assert res["translatedText"] == "bonjour"
+        assert res["detectedSourceLanguage"] == "unknown"
+
+    def test_translate_with_nouns_and_verbs(self, monkeypatch):
+
+        calls = []
+
+        def fake_post(url, data):
+            # record what was asked to translate
+            calls.append(data.get("q"))
+
+            class FakeResp:
+                status_code = 200
+
+                def json(self):
+                    q = data.get("q")
+                    # return translation that includes original text so we can assert
+                    return {"data": {"translations": [{"translatedText": f"{q}_translated"}]}}
+
+                text = "OK"
+
+            return FakeResp()
+
+        monkeypatch.setattr(m.requests, "post", fake_post)
+
+        req = m.TranslateRequest(text="good morning", target="zh", nouns=["cat", "dog"], verbs=["run"])
+        res = m.translate_text(req)
+
+        # main text + 2 nouns + 1 verb -> 4 calls
+        assert len(calls) == 4
+        assert res["translatedText"] == "good morning_translated"
+        # translatedNouns and translatedVerbs should preserve original items and translated results
+        assert res["translatedNouns"] == [
+            {"original": "cat", "translated": "cat_translated"},
+            {"original": "dog", "translated": "dog_translated"},
+        ]
+        assert res["translatedVerbs"] == [{"original": "run", "translated": "run_translated"}]
+
+    def test_translate_api_error_raises_http_exception(self, monkeypatch):
+
+        def fake_post(url, data):
+            class FakeResp:
+                status_code = 500
+                text = "Server error"
+
+                def json(self):
+                    return {}
+
+            return FakeResp()
+
+        monkeypatch.setattr(m.requests, "post", fake_post)
+
+        req = m.TranslateRequest(text="will fail", target="zh")
+
+        with pytest.raises(HTTPException) as excinfo:
+            m.translate_text(req)
+
+        assert excinfo.value.status_code == 500
+
+    def test_translate_noun_api_error_bubbles_up(self, monkeypatch):
+
+        # First call (main text) succeeds
+        def fake_post(url, data):
+            q = data.get("q")
+            class FakeResp:
+                text = ""
+
+                def __init__(self, code):
+                    self.status_code = code
+
+                def json(self):
+                    return {"data": {"translations": [{"translatedText": f"{q}_translated"}]}}
+
+            if q == "will fail noun":
+                return FakeResp(500)
+            return FakeResp(200)
+
+        monkeypatch.setattr(m.requests, "post", fake_post)
+
+        req = m.TranslateRequest(text="ok", target="zh", nouns=["will fail noun"])
+
+        with pytest.raises(HTTPException):
+            m.translate_text(req)
