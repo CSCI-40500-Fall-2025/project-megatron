@@ -4,6 +4,7 @@ from fastapi import HTTPException
 import sys
 import os
 import logging
+import server.main as m
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
@@ -180,7 +181,7 @@ class TestTranslate:
         res = m.translate_text(req)
 
         # Assertions: make sure DEBUG logs captured main text, nouns, verbs
-        messages = [record.getMessage().replace("'", "") for record in caplog.records]
+        messages = [record.getMessage() for record in caplog.records]
 
         assert any("hello world" in msg for msg in messages)
         assert any("translatedText" in msg or "translations" in msg for msg in messages)
