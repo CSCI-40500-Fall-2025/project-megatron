@@ -183,7 +183,7 @@ class TestTranslate:
         messages = [record.message for record in caplog.records]
 
         # Now check that something was logged
-        assert any("hello world" in record.message for record in caplog.records)
+        assert any("'hello world'" in record.message for record in caplog.records)
         assert any("translatedText" in record.message or "translations" in record.message 
                    for record in caplog.records)
         assert any("Translating noun: cat" in msg for msg in messages)
