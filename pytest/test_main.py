@@ -8,6 +8,9 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")
 
 import server.main as m
 
+@pytest.fixture(autouse=True)
+def set_api_key(monkeypatch):
+    monkeypatch.setattr(m, "API_KEY", "fake-key")
 
 class TestTranslate:
     def test_translate_success_no_nouns_verbs(self, monkeypatch):
