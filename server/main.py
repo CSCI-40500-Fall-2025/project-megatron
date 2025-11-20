@@ -13,7 +13,7 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],  # frontend server
+    allow_origins=["http://localhost:5173","https://csci-40500-fall-2025.github.io/project-megatron/","https://csci-40500-fall-2025.github.io"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -28,6 +28,37 @@ class TranslateRequest(BaseModel):
     text: str
     target: str = "zh"
     nouns: Optional[List[str]] = None
+    verbs: Optional[List[str]] = None
+
+
+class SignUpRequest(BaseModel):
+    email: EmailStr
+    password: str
+
+USERS = {}
+
+@app.post("/signup")
+def signup(req: SignUpRequest):
+    email = req.email.lower()
+    password = req.password
+
+    # validate password
+    ok, errors = is_strong_password(password)
+    if not ok:
+        raise HTTPException(status_code=400, detail={"errors": errors})
+
+    # check for existing user
+    if email in USERS:
+        raise HTTPException(status_code=409, detail="User already exists")
+
+    # hashed = hash_password(password)
+    USERS[email] = {
+        "email": email,
+        "password": password,
+        "created_at": datetime.utcnow().isoformat(),
+    }
+
+    return {"email": email, "created_at": USERS[email]["created_at"]}
 
 @app.post("/translate")
 def translate_text(req: TranslateRequest):
@@ -71,5 +102,25 @@ def translate_text(req: TranslateRequest):
         "input": req.text,
         "translatedText": translated_text,
         "detectedSourceLanguage": detected_source,
-        "translatedNouns": noun_translations
+        "translatedNouns": noun_translations,
+        "translatedVerbs": verb_translations
     }
+
+def is_valid_email(email: str) -> bool:
+    if not email or not isinstance(email, str):
+        return False
+    return bool(re.match(r"^\S+@\S+\.\S+$", email))
+
+
+def is_strong_password(password: str) -> Tuple[bool, list]:
+    errors = []
+    if not isinstance(password, str):
+        errors.append("password must be a string")
+        return False, errors
+    if len(password) < 12:
+        errors.append("password must be at least 12 characters")
+    if not re.search(r"\d", password):
+        errors.append("password must contain a number")
+    if not re.search(r"[^A-Za-z0-9]", password):
+        errors.append("password must contain a special character")
+    return len(errors) == 0, errors
