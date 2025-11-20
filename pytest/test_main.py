@@ -173,9 +173,9 @@ class TestTranslate:
         # Call translate_text
         req = m.TranslateRequest(
             text="hello world", 
-            target="es"
+            target="es",
             nouns=["cat", "dog"],
-            verbs=["run"]
+            verbs=["run"],
         )
         res = m.translate_text(req)
 

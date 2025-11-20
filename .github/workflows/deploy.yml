@@ -37,6 +37,10 @@ jobs:
       - name: Run pytest
         run: |
           pytest -q pytest
+      
+      - name: Run logging at the lowest granularity level
+        run: |
+          pytest -v --capture=tee-sys
           
   build:
     needs: test
