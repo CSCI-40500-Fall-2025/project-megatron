@@ -180,12 +180,10 @@ class TestTranslate:
         res = m.translate_text(req)
 
         # Assertions: make sure DEBUG logs captured main text, nouns, verbs
-        messages = [record.message for record in caplog.records]
+        messages = [record.getMessage() for record in caplog.records]
 
-        # Now check that something was logged
-        assert any("'hello world'" in record.message for record in caplog.records)
-        assert any("translatedText" in record.message or "translations" in record.message 
-                   for record in caplog.records)
+        assert any("hello world" in msg for msg in messages)
+        assert any("translatedText" in msg or "translations" in msg for msg in messages)
         assert any("Translating noun: cat" in msg for msg in messages)
         assert any("Translating noun: dog" in msg for msg in messages)
         assert any("Translating verb: run" in msg for msg in messages)
