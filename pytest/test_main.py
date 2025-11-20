@@ -168,7 +168,7 @@ class TestTranslate:
         monkeypatch.setattr(m.requests, "post", fake_post)
 
         # Capture logs at DEBUG level (lowest granularity level)
-        caplog.set_level(logging.DEBUG, logger="server.main")
+        caplog.set_level(logging.DEBUG, logger=m.logger.name)
 
         # Call translate_text
         req = m.TranslateRequest(
@@ -180,7 +180,7 @@ class TestTranslate:
         res = m.translate_text(req)
 
         # Assertions: make sure DEBUG logs captured main text, nouns, verbs
-        messages = [record.getMessage() for record in caplog.records]
+        messages = [record.getMessage().replace("'", "") for record in caplog.records]
 
         assert any("hello world" in msg for msg in messages)
         assert any("translatedText" in msg or "translations" in msg for msg in messages)
