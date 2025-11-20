@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 from typing import List, Optional
 from logger import setup_logging
 
-log = setup_logging()
+log = setup_logging(ci_mode=False)
 
 app = FastAPI()
 

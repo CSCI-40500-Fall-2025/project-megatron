@@ -1,6 +1,17 @@
 import logging
 from logging.handlers import RotatingFileHandler
 import os
+import requests
+
+SUMO_ENDPOINT = os.getenv("SUMO_ENDPOINT")
+class SumoLogicHandler(logging.Handler):
+    def emit(self, record):
+        log_entry = self.format(record)
+        try:
+            requests.post(SUMO_ENDPOINT, data=log_entry.encode("utf-8"))
+        except Exception:
+            pass  # don't crash app on logging failure
+
 
 LOG_DIR = "logs"
 os.makedirs(LOG_DIR, exist_ok=True)
@@ -28,5 +39,9 @@ def setup_logging(ci_mode=False):
         file_handler.setLevel(logging.INFO)
         file_handler.setFormatter(formatter)
         logger.addHandler(file_handler)
+    
+    sumo_handler = SumoLogicHandler()
+    sumo_handler.setFormatter(formatter)
+    logger.addHandler(sumo_handler)
     
     return logger
