@@ -3,6 +3,7 @@ from fastapi import HTTPException
 
 import sys
 import os
+import logging
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
@@ -147,3 +148,44 @@ class TestTranslate:
 
         with pytest.raises(HTTPException):
             m.translate_text(req)
+
+    def test_translate_logs_messages(self, monkeypatch, caplog):
+
+        # Make the HTTP call succeed
+        def fake_post(url, data):
+            class FakeResp:
+                status_code = 200
+                text = "OK"
+
+                def json(self):
+                    return {
+                        "data": {
+                            "translations": [{"translatedText": f"{data.get('q')}_translated"}]
+                        }
+                    }
+            return FakeResp()
+
+        monkeypatch.setattr(m.requests, "post", fake_post)
+
+        # Capture logs at DEBUG level (lowest granularity level)
+        caplog.set_level(logging.DEBUG, logger="server.main")
+
+        # Call translate_text
+        req = m.TranslateRequest(
+            text="hello world", 
+            target="es"
+            nouns=["cat", "dog"],
+            verbs=["run"]
+        )
+        res = m.translate_text(req)
+
+        # Assertions: make sure DEBUG logs captured main text, nouns, verbs
+        messages = [record.message for record in caplog.records]
+
+        # Now check that something was logged
+        assert any("hello world" in record.message for record in caplog.records)
+        assert any("translatedText" in record.message or "translations" in record.message 
+                   for record in caplog.records)
+        assert any("Translating noun: cat" in msg for msg in messages)
+        assert any("Translating noun: dog" in msg for msg in messages)
+        assert any("Translating verb: run" in msg for msg in messages)
