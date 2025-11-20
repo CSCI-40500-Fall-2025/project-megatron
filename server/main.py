@@ -7,9 +7,7 @@ import logging
 from logging.handlers import RotatingFileHandler
 from dotenv import load_dotenv
 from typing import List, Optional
-from logger import setup_logging
 
-log = setup_logging(ci_mode=False)
 SUMO_ENDPOINT = os.getenv("SUMO_ENDPOINT")
 class SumoLogicHandler(logging.Handler):
     def emit(self, record):
