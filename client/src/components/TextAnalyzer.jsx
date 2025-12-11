@@ -37,9 +37,32 @@ function TextAnalyzer() {
   const [verbs, setVerbs] = useState([]);
   const [replace, setReplace] = useState("noun"); // keeps track of what part of speech is getting replaced - for ex: "noun" or "verb"
   //const [nounMap, setNounMap] = useState({}); // Map of original to translated nouns
-
+  const [prompt, setPrompt] = useState("");
+      const [generatedText, setParagraph] = useState("");
+      //generateText("dogs");
+      async function generateText(){
+      const res = await fetch((`${API}generate`), {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+          text: prompt,
+          })
+      });
+      const data = await res.json();
+      console.log(data.text);
+      setText(data.text)
+      }
   return (
     <div className="card">
+      <textarea
+            placeholder="Input prompt"
+            value={prompt}
+            onChange={(e) => setPrompt(e.target.value)}
+            rows={1}
+            cols={10}
+        />
+      <button onClick={generateText}> Generate </button>
+      
       <p>I'm looking to learn:</p>
       <select value={replace} onChange={(e) => setReplace(e.target.value)}>
         <option value="noun">Nouns</option>
